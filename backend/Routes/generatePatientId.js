@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Patients = require("../schema/patientsSchema");
+const Patients = require("../schema/user");
 
 // Define the hospital abbreviation
 const hospitalAbbreviation = "ABC";

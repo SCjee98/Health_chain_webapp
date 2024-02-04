@@ -102,10 +102,15 @@ const AdmissionForm = () => {
   return (
     <form
       style={{
-        margin: "30px",
-        marginLeft: "10px",
-        border: "2px solid blue",
+        margin: "auto",
         padding: "20px",
+        background: "#ffffff",
+        borderRadius: "8px",
+        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        maxWidth: "500px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <Typography variant="h5" gutterBottom>
@@ -126,7 +131,7 @@ const AdmissionForm = () => {
         value={formData.hadm_id}
         onChange={handleChange}
         fullWidth
-        style={{ marginBottom: "10px" }}
+        style={{ marginBottom: "15px" }}
       />
 
       {/* Add other fields as needed */}

@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema({
     default: "Patient",
     enum: ["Patient"],
   },
-  patientID: {
+  subject_id: {
     type: String, // You can specify any additional configuration you need here
     unique: true, // Ensure that patientIDs are unique
     required: true, // Make it required

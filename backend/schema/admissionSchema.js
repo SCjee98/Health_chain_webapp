@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const admissionSchema = new mongoose.Schema({
   subject_id: {
-    type: Number,
-    ref: "Patients",
+    type: String,
+    ref: "User",
 
     required: true,
   },
@@ -11,7 +11,7 @@ const admissionSchema = new mongoose.Schema({
   // admissionDate: { type: Date, required: true },
   admittime: { type: String, required: true },
   dischtime: { type: String, required: true },
-  deathtime: { type: String, required: true },
+  deathtime: { type: String, required: false },
   admission_type: { type: String, required: true },
   admission_provider_id: { type: String, required: true },
   admission_location: { type: String, required: true },

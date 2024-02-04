@@ -12,8 +12,15 @@ import {
   Paper,
   Typography,
   Box,
+  Modal,
   Grid,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Card,
+  CardContent,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import NavBar from "../adminDashboard/NavBar";
 
 const HealthStaffDashboard = () => {
@@ -26,7 +33,9 @@ const HealthStaffDashboard = () => {
     localStorage.removeItem("jwtToken");
     navigate("/");
   };
-
+  const handleCloseModal = () => {
+    setSelectedPatient(null);
+  };
   useEffect(() => {
     // Fetch list of patients from the server
     const token = localStorage.getItem("jwtToken");
@@ -51,6 +60,66 @@ const HealthStaffDashboard = () => {
     setSelectedPatient(patient);
   };
 
+  const styles = {
+    patientCard: {
+      border: "1px solid #ddd",
+      borderRadius: "8px",
+      padding: "10px",
+      marginBottom: "10px",
+      cursor: "pointer",
+      transition: "background-color 0.3s",
+    },
+    selectedPatient: {
+      backgroundColor: "#f0f8ff", // Light blue background for selected patient
+    },
+    formButton: {
+      margin: "5px",
+    },
+  };
+
+  const forms = [
+    { name: "Admission Form", link: "/admission" },
+    { name: "EMAR Form", link: "/emar" },
+    { name: "DRG Codes Form", link: "/drgcodes" },
+    { name: "Lab Events Form", link: "/lab-events" },
+    { name: "Microevents Form", link: "/microevents" },
+    { name: "OMR Form", link: "/omr" },
+    { name: "Pharmacy Form", link: "/pharmacy" },
+    { name: "POE Form", link: "/poe" },
+    { name: "POE Details Form", link: "/poe-details" },
+    { name: "Prescriptions Form", link: "/prescriptions" },
+    { name: "Procedures ICD Form", link: "/procedures-icd" },
+    { name: "Provider Form", link: "/provider" },
+    { name: "Services Form", link: "/services" },
+    { name: "Transfers Form", link: "/transfers" },
+    { name: "Caregivers Form", link: "/caregivers" },
+    { name: "Chart Events Form", link: "/chart-events" },
+    { name: "D_Items Form", link: "/d-items" },
+    { name: "DateTimeEvents Form", link: "/datetimeevents" },
+    { name: "ICUSTays Form", link: "/icustays" },
+    { name: "Ingredient Events Form", link: "/ingredientevents" },
+    { name: "Input Events Form", link: "/inputevents" },
+    { name: "Output Events Form", link: "/outputevents" },
+    { name: "Procedure Events Form", link: "/procedureevents" },
+    { name: "HCPS Events Form", link: "/hcps-events" },
+    { name: "LAB ITEMS FORM", link: "/d_labItems" },
+    // Add more forms as needed
+  ];
+  // const generateFormLinks = () => {
+  //   return forms.map((form, index) => (
+  //     <Grid item xs={4} key={index}>
+  //       <Link
+  //         to={form.link}
+  //         state={{ selectedSubject_id: selectedPatient.subject_id }}
+  //       >
+  //         <Button variant="contained" color="primary" fullWidth>
+  //           {form.name}
+  //         </Button>
+  //       </Link>
+  //     </Grid>
+  //   ));
+  // };
+
   return (
     <div>
       <Box
@@ -61,85 +130,66 @@ const HealthStaffDashboard = () => {
       >
         <NavBar> Health Staff DAshboard</NavBar>
         {/* <Typography variant="h4">Health Staff Dashboard</Typography> */}
-        <Button variant="contained" color="primary" onClick={handleLogout}>
-          Logout
-        </Button>
       </Box>
-
-      <TextField
-        label="Search Patients"
-        variant="outlined"
-        value={searchTerm}
-        onChange={handleSearch}
-        fullWidth
-        margin="normal"
-      />
-
-      <TableContainer component={Paper}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6} lg={4}>
+          <TextField
+            label="Search Patients"
+            variant="outlined"
+            value={searchTerm}
+            onChange={handleSearch}
+            fullWidth
+            margin="normal"
+          />
+        </Grid>
+      </Grid>
+      <TableContainer component={Paper} sx={{ margin: "20px 0" }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "#f0f0f0" }}>
             <TableRow>
-              <TableCell>Subject Id</TableCell>
-              <TableCell>Gender</TableCell>
-              <TableCell>Anchor Age</TableCell>
-              <TableCell>Anchor Year</TableCell>
-              <TableCell>Anchor Year Group</TableCell>
-              <TableCell>Date of Death</TableCell>
+              <TableCell align="center">Subject Id</TableCell>
+              <TableCell align="center">First Name</TableCell>
+              <TableCell align="center">Last Name</TableCell>
+              <TableCell align="center">Gender</TableCell>
+              <TableCell align="center">Date of Birth</TableCell>
+              <TableCell align="center">Contact Number</TableCell>
             </TableRow>
           </TableHead>
-          {/* <TableBody>
+
+          <TableBody>
             {patients
               .filter(
                 (patient) =>
-                  patient.subject_id
+                  patient.firstName
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                  patient.gender
+                  patient.lastName
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                  // patient.email.toLowerCase().includes(searchTerm.toLowerCase())
-                  patient.anchor_age
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  patient.anchor_year
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  patient.anchor_year_group
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  patient.dod.toLowerCase().includes(searchTerm.toLowerCase())
+                  patient.email.toLowerCase().includes(searchTerm.toLowerCase())
               )
-
-              .map((patient) => (
+              .map((patient, index) => (
                 <TableRow
                   key={patient.subject_id}
                   onClick={() => handlePatientSelect(patient)}
-                  style={{ cursor: "pointer" }}
+                  sx={{
+                    cursor: "pointer",
+                    ...styles.patientCard,
+                    ...(selectedPatient === patient
+                      ? styles.selectedPatient
+                      : {}),
+                    "&:hover": {
+                      backgroundColor: "#f0f8ff", // Light blue on hover
+                    },
+                    backgroundColor: index % 2 === 0 ? "#f9f9f9" : "white",
+                  }}
                 >
-                  <TableCell>{patient.subject_id}</TableCell>
-                  <TableCell>{patient.gender}</TableCell>
-                  <TableCell>{patient.anchor_age}</TableCell>
-                  <TableCell>{patient.anchor_year}</TableCell>
-                  <TableCell>{patient.anchor_year_group}</TableCell>
-                  <TableCell>{patient.dod}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody> */}
-          <TableBody>
-            {patients
-              .filter((patient) => patient.subject_id.includes(searchTerm))
-              .map((patient) => (
-                <TableRow
-                  key={patient.subject_id}
-                  onClick={() => handlePatientSelect(patient)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <TableCell>{patient.subject_id}</TableCell>
-                  <TableCell>{patient.gender}</TableCell>
-                  <TableCell>{patient.anchor_age}</TableCell>
-                  <TableCell>{patient.anchor_year}</TableCell>
-                  <TableCell>{patient.anchor_year_group}</TableCell>
-                  <TableCell>{patient.dod}</TableCell>
+                  <TableCell align="center">{patient.subject_id}</TableCell>
+                  <TableCell align="center">{patient.firstName}</TableCell>
+                  <TableCell align="center">{patient.lastName}</TableCell>
+                  <TableCell align="center">{patient.gender}</TableCell>
+                  <TableCell align="center">{patient.dob}</TableCell>
+                  <TableCell align="center">{patient.contactNumber}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -148,263 +198,96 @@ const HealthStaffDashboard = () => {
 
       {selectedPatient && (
         <Paper elevation={3}>
-          <Box mt={4}>
-            <Typography variant="h4">
-              Selected Patient: {selectedPatient.subject_id}{" "}
-              {/* {selectedPatient.lastName} */}
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography variant="h5">Forms:</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/admission`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Admission Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/emar`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    EMAR Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/drgcodes`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    DRG Codes Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/lab-events`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Lab Events Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/microevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Microevents Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/omr`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    OMR (Order Management Record) Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/pharmacy`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Pharmacy Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/poe`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    POE (Provider Order Entry) Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/poe-details`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    POE Details Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/prescriptions`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Prescriptions Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/procedures-icd`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Procedures ICD Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/provider`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Provider Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/services`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Services Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/transfers`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Transfers Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/caregivers`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Caregivers Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/chart-events`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Chart Events Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/d-items`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    D_Items Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/datetimeevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    DateTimeEvents Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/icustays`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    ICUSTays Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/ingredientevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Ingredient Events Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/inputevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Input Events Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/outputevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Output Events Form
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={4}>
-                <Link
-                  to={`/procedureevents`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    Procedure Events Form
-                  </Button>
-                </Link>
-                <Link
-                  to={`/hcps-events`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    HCPS EVENTS FORM
-                  </Button>
-                </Link>
-                <Link
-                  to={`/d_labItems`}
-                  state={{ selectedSubject_id: selectedPatient.subject_id }}
-                >
-                  <Button variant="contained" color="primary" fullWidth>
-                    LAB ITEMS FORM
-                  </Button>
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+          <Modal open={Boolean(selectedPatient)} onClose={handleCloseModal}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                border: "2px solid #000",
+                boxShadow: 24,
+                p: 4,
+                maxWidth: "90%",
+                overflow: "auto", // Enable scrolling
+                maxHeight: "80vh", // Set maximum height for responsiveness
+              }}
+            >
+              <Card elevation={3} sx={{ margin: "20px 0", padding: "16px" }}>
+                <CardContent>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      marginBottom: "16px",
+                      fontFamily: "Verdana, sans-serif",
+                      color: "#2C3E50",
+                      textShadow: "1px 1px 2px #888888",
+                      backgroundColor: "#ECF0F1",
+                      padding: "8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    Selected Patient: {selectedPatient.subject_id}
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      marginBottom: "0px",
+                      fontFamily: "Verdana, sans-serif",
+                      color: "#2C3E50",
+                      textShadow: "1px 1px 2px #888888",
+                      backgroundColor: "#ECF0F1",
+                      padding: "2px",
+                      borderRadius: "2px",
+                    }}
+                  >
+                    Forms:
+                  </Typography>
+                  {/* <Grid>{generateFormLinks(forms)}</Grid> */}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Form Name</TableCell>
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/* Map over the forms and render each row */}
+                      {forms.map((form, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{form.name}</TableCell>
+                          <TableCell>
+                            <Link
+                              to={form.link}
+                              state={{
+                                selectedSubject_id: selectedPatient.subject_id,
+                              }}
+                              onClick={handleCloseModal}
+                            >
+                              <Button variant="contained" color="primary">
+                                View Form
+                              </Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          </Modal>
+          <Button variant="contained" color="primary" onClick={handleLogout}>
+            Logout
+          </Button>
         </Paper>
       )}
     </div>

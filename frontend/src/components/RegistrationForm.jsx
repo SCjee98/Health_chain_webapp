@@ -15,7 +15,7 @@ import {
   RadioGroup,
   FormControl,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
   const [email, setEmail] = useState("");
@@ -28,6 +28,7 @@ const RegistrationForm = () => {
   const [address, setAddress] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const errors = {};
@@ -98,16 +99,16 @@ const RegistrationForm = () => {
 
   const handleSubmit = async () => {
     const isValid = validateForm();
-  
+
     if (isValid) {
       try {
         // Fetch a unique patient ID from the server
-        const patientIDResponse = await fetch(
+        const subject_idResponse = await fetch(
           "http://localhost:5000/api/generate-patient-id"
         );
-        const patientIDJSON = await patientIDResponse.json();
-        const patientID = patientIDJSON.patientID;
-  
+        const subject_idJSON = await subject_idResponse.json();
+        const subject_id = subject_idJSON.subject_id;
+
         // Include the generated patient ID in the registration data
         const formData = {
           email,
@@ -118,22 +119,20 @@ const RegistrationForm = () => {
           gender,
           contactNumber,
           address,
-          patientID, // Assign the generated patient ID to the form data
+          subject_id, // Assign the generated patient ID to the form data
         };
-  
+
         // Send the registration data to the server
-        const response = await fetch(
-          "http://localhost:5000/api/registration",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-  
+        const response = await fetch("http://localhost:5000/api/registration", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
         if (response.ok) {
+          navigate("/signin");
           // Registration successful, handle the response accordingly
         } else {
           // Registration failed, handle the response accordingly
@@ -144,7 +143,6 @@ const RegistrationForm = () => {
       }
     }
   };
-  
 
   return (
     <div style={{ display: "grid", height: "100vh", placeItems: "center" }}>
@@ -158,8 +156,7 @@ const RegistrationForm = () => {
           marginBottom: "5px",
           marginTop: "10px",
         }}
-      >
-      </Typography>
+      ></Typography>
       <Paper
         sx={{
           padding: "30px",

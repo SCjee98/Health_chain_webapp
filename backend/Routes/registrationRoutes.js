@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
       gender,
       contactNumber,
       address,
-      patientID,
+      subject_id,
     } = req.body;
 
     // Validate gender
@@ -58,7 +58,7 @@ router.post("/", async (req, res) => {
       contactNumber,
       address,
       role: "Patient",
-      patientID,
+      subject_id,
     });
 
     await newUser.save();
@@ -79,11 +79,9 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ errors });
     }
 
-    return res
-      .status(500)
-      .json({
-        error: "An error occurred during registration. Please try again later.",
-      });
+    return res.status(500).json({
+      error: "An error occurred during registration. Please try again later.",
+    });
   }
 });
 

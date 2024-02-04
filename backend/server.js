@@ -53,13 +53,14 @@ const ingredientEventsRoutes = require("./Routes/ingredientEventsROutes"); // Im
 const inputEventsRoutes = require("./Routes/inputeventsRoutes"); // Import the Input Events routes
 const outputEventsRoutes = require("./Routes/outputeventsRoutes"); // Import the Output Events routes
 const procedureEventsRoutes = require("./Routes/procedureeventsRoutes"); // Import the Procedure Events routes
-const PatientsRoutes = require("./Routes/patientsRoutes");
+// const PatientsRoutes = require("./Routes/patientsRoutes");
 const DischargeDetail = require("./Routes/discharge-detailRoutes");
 const Radiology = require("./Routes/radiologyRoutes");
 const RadiologyDetails = require("./Routes/radiologyDetailsRoutes");
 const d_icd_diagnoses = require("./Routes/d_icd_diagnoses");
 const generateNoteIdRoutes = require("./Routes/generate_note_id"); // Import the generateNoteIdRoutes
 const generateitemIdRoutes = require("./Routes/generate_item_id"); // Import the generateLabItemsRoutes
+const LoginRoutes = require("./Routes/login");
 const app = express();
 
 app.use(bodyParser.json());
@@ -142,7 +143,7 @@ app.use("/api/ingredient-events", ingredientEventsRoutes); // Include Ingredient
 app.use("/api/input-events", inputEventsRoutes); // Include Input Events routes
 app.use("/api/output-events", outputEventsRoutes); // Include Output Events routes
 app.use("/api/procedure-events", procedureEventsRoutes); // Include Procedure Events routes
-app.use("/api/patients", PatientsRoutes);
+// app.use("/api/patients", PatientsRoutes);
 app.use("/api/discharge_detail", DischargeDetail);
 app.use("/api/radiology", Radiology);
 app.use("/api/radiology_details", RadiologyDetails);
@@ -150,6 +151,7 @@ app.use("/api/d_icd_diagnoses", d_icd_diagnoses);
 app.use("/api/generate-item-id", generateitemIdRoutes);
 
 app.use("/api/generate-note-id", generateNoteIdRoutes);
+app.use("/api/login", LoginRoutes);
 // Add a route handler for the home route ('/') to provide a response or redirect to the login page
 app.get("/", (req, res) => {
   res.send("Welcome to the backend!"); //replaceable

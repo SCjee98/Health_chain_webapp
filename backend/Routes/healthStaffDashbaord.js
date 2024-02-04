@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const Patient = require("../schema/patientsSchema"); // Assuming the schema for patients
+const Patient = require("../schema/user"); // Assuming the schema for patients
 
 // // GET all patients
 // router.get("/patients", async (req, res) => {
@@ -63,7 +63,7 @@ router.get("/patients", async (req, res) => {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-    if (decodedToken.role !== "Health Staff") {
+    if (decodedToken.role !== "HealthStaff") {
       return res.status(403).json({ error: "Insufficient role permissions." });
     }
 

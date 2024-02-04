@@ -23,8 +23,8 @@ const healthStaffSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: "Health Staff",
-    //enum: ["Pending", "pending", "Health Staff"],
+    default: "HealthStaff",
+    enum: ["Pending", "pending", "HealthStaff"],
   },
 });
 

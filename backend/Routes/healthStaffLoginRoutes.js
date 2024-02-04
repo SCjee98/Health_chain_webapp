@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
     // Generate a token
     // Generate a token with the role "healthStaff"
     const token = jwt.sign(
-      { userId: healthStaff._id, role: "Health Staff" },
+      { userId: healthStaff._id, role: "HealthStaff" },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "24h" }
     );
